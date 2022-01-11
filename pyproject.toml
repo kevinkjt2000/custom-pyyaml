@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "custom-pyyaml"
+version = "0.1.0"
+description = ""
+authors = ["Kevin Tindall <kevinkjt2000@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+PyYAML = "^6.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+rerun = "^1.0.30"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
