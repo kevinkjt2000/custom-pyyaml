@@ -16,7 +16,9 @@ class KubeSecret(pydantic.BaseModel):
 
 
 def kube_secret_constructor(loader, node):
-    return KubeSecret(**loader.construct_mapping(node))
+    need_to_split = loader.construct_scalar(node)
+    name, key = need_to_split.split(":")
+    return KubeSecret(name=name, key=key)
 
 
 yaml.SafeLoader.add_constructor("!KubeSecret", kube_secret_constructor)
