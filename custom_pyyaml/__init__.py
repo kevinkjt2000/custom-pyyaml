@@ -1,14 +1,22 @@
+from typing import Optional
+
+import pydantic
 import yaml
 
 
-class KubeSecret:
-    def __setstate__(self, d):
-        name = d["name"]
-        key = d["key"]
+class KubeSecret(pydantic.BaseModel):
+    name: str
+    key: str
+    value: Optional[str] = None
 
-        print(f"Fetching super-secret {name}.{key}")
-        self._value = "tops3cret" # TODO: talk to kube API instead
+    @pydantic.validator('value', always=True)
+    def populate_secret_value(cls, v, values) -> str:
+        print(f'Fetching super-secret {values["name"]}.{values["key"]}')
+        return "tops3cret" # TODO: talk to kube API instead
 
-    @property
-    def value(self):
-        return self._value
+
+def kube_secret_constructor(loader, node):
+    return KubeSecret(**loader.construct_mapping(node))
+
+
+yaml.SafeLoader.add_constructor("!KubeSecret", kube_secret_constructor)
